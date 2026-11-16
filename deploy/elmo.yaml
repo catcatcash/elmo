@@ -1,0 +1,63 @@
+# Rendered by elmo 0.7.12 on 2026-11-14T08:09:54Z
+# Run `elmo upgrade` after upgrading the CLI to refresh this file.
+
+name: elmo
+
+services:
+  postgres:
+    image: postgres:18-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: elmo
+    volumes:
+      - postgres_data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    restart: unless-stopped
+
+  db-migrate:
+    image: elmohq/elmo-db-migrate:0.7.12
+    environment:
+      DATABASE_URL: postgres://postgres:${POSTGRES_PASSWORD}@postgres:5432/elmo
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  web:
+    image: elmohq/elmo-web:0.7.12
+    env_file:
+      - path: .env
+        required: true
+    ports:
+      - "127.0.0.1:1515:3000"
+    volumes:
+      - /home/babysor00/elmo/prompt-suggestions.mjs:/app/.output/server/_ssr/prompt-suggestions-D7Eu8xe_.mjs:ro
+      - /home/babysor00/elmo/entitlements.mjs:/app/.output/server/_ssr/entitlements-GphGvdHm.mjs:ro
+    depends_on:
+      db-migrate:
+        condition: service_completed_successfully
+    restart: unless-stopped
+
+  worker:
+    image: elmohq/elmo-worker:0.7.12
+    env_file:
+      - path: .env
+        required: true
+    stop_grace_period: 35s
+    restart: unless-stopped
+    volumes:
+      - /home/babysor00/elmo/openrouter.ts:/app/node_modules/.pnpm/@workspace+lib@file+packages+lib_@better-auth+utils@0.5.1_@better-fetch+fetch@1.3.3_@op_bea234057a58e8f467676ab053565bbd/node_modules/@workspace/lib/src/providers/registry/openrouter.ts:ro
+      - /home/babysor00/elmo/codex-cli.ts:/app/node_modules/.pnpm/@workspace+lib@file+packages+lib_@better-auth+utils@0.5.1_@better-fetch+fetch@1.3.3_@op_bea234057a58e8f467676ab053565bbd/node_modules/@workspace/lib/src/providers/registry/codex-cli.ts:ro
+      - /home/babysor00/elmo/providers-index.ts:/app/node_modules/.pnpm/@workspace+lib@file+packages+lib_@better-auth+utils@0.5.1_@better-fetch+fetch@1.3.3_@op_bea234057a58e8f467676ab053565bbd/node_modules/@workspace/lib/src/providers/index.ts:ro
+      - /home/babysor00/elmo/handlers.ts:/app/src/handlers.ts:ro
+    depends_on:
+      db-migrate:
+        condition: service_completed_successfully
+
+volumes:
+  postgres_data:
