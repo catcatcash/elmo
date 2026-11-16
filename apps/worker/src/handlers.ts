@@ -87,7 +87,7 @@ const MAINTENANCE_MONITOR = {
 export async function registerHandlers(boss: PgBoss): Promise<void> {
 	await boss.work<ProcessPromptData>(
 		PROCESS_PROMPT_QUEUE,
-		{ localConcurrency: 10 },
+		{ localConcurrency: 12 },
 		withSentry(PROCESS_PROMPT_QUEUE, processPromptJob),
 	);
 	console.log(`Registered handler: ${PROCESS_PROMPT_QUEUE}`);

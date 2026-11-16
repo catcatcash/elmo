@@ -1,0 +1,16 @@
+[Unit]
+Description=Elmo Codex CLI bridge
+After=network-online.target docker.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=babysor00
+Group=babysor00
+EnvironmentFile=/home/babysor00/elmo/codex-bridge.env
+ExecStart=/usr/bin/python3 /home/babysor00/elmo/codex-bridge.py
+Restart=on-failure
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target

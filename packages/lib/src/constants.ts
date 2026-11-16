@@ -25,9 +25,9 @@ export function getDefaultDelayHours(): number {
 }
 
 export const MAX_COMPETITORS = 500;
-export const MAX_PROMPTS = 100;
+export const MAX_PROMPTS = 500;
 
-export const PROMPT_SUGGESTION_RUNS_PER_DAY = 5;
+export const PROMPT_SUGGESTION_RUNS_PER_DAY = 99;
 
 /** For a search that happened but whose query strings the provider withholds. Fan-out reads filter it out. */
 export const WEB_QUERIES_UNAVAILABLE = "unavailable";

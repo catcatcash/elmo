@@ -7,6 +7,7 @@ import { mistralApi } from "./registry/mistral-api";
 import { olostep } from "./registry/olostep";
 import { openaiApi } from "./registry/openai-api";
 import { openrouter } from "./registry/openrouter";
+import { codexCli } from "./registry/codex-cli";
 import { oxylabs } from "./registry/oxylabs";
 import { searchapi } from "./registry/searchapi";
 import { stub } from "./registry/stub";
@@ -36,6 +37,7 @@ const providerMap: Record<string, Provider> = {
 	"mistral-api": mistralApi,
 	dataforseo,
 	openrouter,
+	"codex-cli": codexCli,
 	stub,
 };
 
